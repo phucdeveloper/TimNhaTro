@@ -18,16 +18,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.doan.timnhatro.R;
 import com.doan.timnhatro.adapter.PictureArrayAdapter;
+import com.doan.timnhatro.adapter.UtilitiesAdapter;
 import com.doan.timnhatro.base.Constants;
 import com.doan.timnhatro.model.MotelRoom;
+import com.doan.timnhatro.model.Utilities;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -38,7 +43,8 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MotelRoom motelRoom;
     private CircleImageView imgAvatar;
-    private TextView txtNameMotelRoom,txtTime,txtPrice,txtStreet,edtDescribe,txtName,txtPhoneNumber, txtUtilities;
+    private TextView txtNameMotelRoom,txtTime,txtPrice,txtStreet,edtDescribe,txtName,txtPhoneNumber;
+    private RecyclerView recyclerViewListUtilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +95,13 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
                 .into(imgAvatar);
 
         txtName.setText(motelRoom.getAccount().getName());
-        txtUtilities.setText(motelRoom.getListUtilities());
 
         SpannableString formatPhoneNumber = new SpannableString("Số điện thoại:   " + motelRoom.getAccount().getPhoneNumber());
         formatPhoneNumber.setSpan(new StyleSpan(BOLD),0,14,0);
         formatTime.setSpan(new ForegroundColorSpan(Color.BLACK),0,14,0);
         txtPhoneNumber.setText(formatPhoneNumber);
+
+        setUpRecyclerViewListUtilities(recyclerViewListUtilities);
     }
 
     private void getIntentData() {
@@ -116,7 +123,47 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.imgAvatar);
         txtName = findViewById(R.id.txtName);
         txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
-        txtUtilities = findViewById(R.id.txtUtilities);
+        recyclerViewListUtilities = findViewById(R.id.recyclerview_list_utilities);
+
+    }
+
+    private void setUpRecyclerViewListUtilities(RecyclerView recyclerView) {
+        final ArrayList<Utilities> arrayList = new ArrayList<>();
+        arrayList.add(new Utilities("WC riêng", R.drawable.icons8_wc_50, false));
+        arrayList.add(new Utilities("Cửa sổ", R.drawable.icons8_open_window_50, false));
+        arrayList.add(new Utilities("Wifi", R.drawable.icons8_wi_fi_24, true));
+        arrayList.add(new Utilities("Chủ riêng", R.drawable.icons8_private_50, false));
+        arrayList.add(new Utilities("Máy nước nóng", R.drawable.icons8_water_heater_50, false));
+        arrayList.add(new Utilities("Tủ lạnh", R.drawable.icons8_fridge_50, false));
+        arrayList.add(new Utilities("Gác lửng", R.drawable.icons8_stairs_50, false));
+        arrayList.add(new Utilities("Tủ đồ", R.drawable.icons8_closet_50, false));
+        arrayList.add(new Utilities("Thú cưng", R.drawable.icons8_pet_commands_summon_50, false));
+        arrayList.add(new Utilities("Chỗ để xe", R.drawable.icons8_parking_50, false));
+        arrayList.add(new Utilities("An ninh", R.drawable.icons8_smart_home_checked_50, false));
+        arrayList.add(new Utilities("Tự do", R.drawable.icons8_clock_50, true));
+        arrayList.add(new Utilities("Máy lạnh", R.drawable.icons8_air_conditioner_50, false));
+        arrayList.add(new Utilities("Nhà bếp", R.drawable.icons8_kitchen_room_50, false));
+        arrayList.add(new Utilities("Máy giặt", R.drawable.icons8_washing_50, false));
+        arrayList.add(new Utilities("Giường", R.drawable.icons8_bed_50, false));
+        arrayList.add(new Utilities("Ti vi", R.drawable.icons8_tv_50, false));
+
+        ArrayList<Utilities> listDataUtilities = new ArrayList<>();
+        String listUtilities = motelRoom.getListUtilities();
+        String[] data = listUtilities.split(", ");
+        for (int i=0; i<data.length; i++){
+            for (int j=0; j<arrayList.size(); j++){
+                if (data[i].equals(arrayList.get(j).getNameUtilities())){
+                    listDataUtilities.add(arrayList.get(j));
+                }
+            }
+        }
+        recyclerView.setHasFixedSize(true);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(DetailMotelRoomActivity.this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+
+        final UtilitiesAdapter adapter = new UtilitiesAdapter(listDataUtilities, DetailMotelRoomActivity.this);
+        recyclerView.setAdapter(adapter);
     }
 
     @SuppressLint("MissingPermission")

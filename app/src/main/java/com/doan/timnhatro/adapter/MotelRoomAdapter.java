@@ -76,51 +76,45 @@ public class MotelRoomAdapter extends RecyclerView.Adapter<MotelRoomAdapter.View
             }
             else {
                 holder.imgThreeDots.setVisibility(View.VISIBLE);
-                holder.imgThreeDots.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        String[] items = {"Sửa phòng","Xoá phòng"};
+                holder.imgThreeDots.setOnClickListener(view -> {
+                    String[] items = {"Sửa phòng","Xoá phòng"};
 
-                        new AlertDialog.Builder(view.getContext())
-                                .setTitle("Quản lí")
-                                .setItems(items, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        switch (which){
-                                            case 0:
-                                                //Toast.makeText(view.getContext(), "Sửa phòng", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(view.getContext(), EditPostActivity.class);
-                                                intent.putExtra("RoomInfo", arrayMotelRoom.get(holder.getAdapterPosition()));
-                                                view.getContext().startActivity(intent);
-                                                break;
-                                            case 1:
-                                                final TextView textView = new TextView(view.getContext());
-                                                textView.setTextSize(16);
-                                                textView.setPadding(50,50,50,50);
-                                                textView.setText("Bạn có chắc muốn xoá phòng này không?");
-                                                new AlertDialog.Builder(view.getContext())
-                                                        .setTitle("Xoá phòng")
-                                                        .setView(textView)
-                                                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                                holder.deleteRoom();
-                                                            }
-                                                        })
-                                                        .setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                                dialogInterface.cancel();
-                                                            }
-                                                        }).show();
-                                                //Toast.makeText(view.getContext(), "Xoá phòng", Toast.LENGTH_SHORT).show();
-                                                //startActivity(new Intent(v.getContext(), UpdateNameActivity.class));
-                                                break;
-                                        }
-                                    }
-                                })
-                                .show();
-                    }
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle("Quản lí")
+                            .setItems(items, (dialog, which) -> {
+                                switch (which){
+                                    case 0:
+                                        //Toast.makeText(view.getContext(), "Sửa phòng", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(view.getContext(), EditPostActivity.class);
+                                        intent.putExtra("RoomInfo", arrayMotelRoom.get(holder.getAdapterPosition()));
+                                        view.getContext().startActivity(intent);
+                                        break;
+                                    case 1:
+                                        final TextView textView = new TextView(view.getContext());
+                                        textView.setTextSize(16);
+                                        textView.setPadding(50,50,50,50);
+                                        textView.setText("Bạn có chắc muốn xoá phòng này không?");
+                                        new AlertDialog.Builder(view.getContext())
+                                                .setTitle("Xoá phòng")
+                                                .setView(textView)
+                                                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        holder.deleteRoom();
+                                                    }
+                                                })
+                                                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.cancel();
+                                                    }
+                                                }).show();
+                                        //Toast.makeText(view.getContext(), "Xoá phòng", Toast.LENGTH_SHORT).show();
+                                        //startActivity(new Intent(v.getContext(), UpdateNameActivity.class));
+                                        break;
+                                }
+                            })
+                            .show();
                 });
             }
         }
@@ -219,29 +213,23 @@ public class MotelRoomAdapter extends RecyclerView.Adapter<MotelRoomAdapter.View
             imgThreeDots = itemView.findViewById(R.id.threedost);
             LikePostRef = FirebaseDatabase.getInstance().getReference().child("LikePost");
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), DetailMotelRoomActivity.class);
-                    intent.putExtra(Constants.MOTEL_ROOM, arrayMotelRoom.get(getAdapterPosition()));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    v.getContext().startActivity(intent);
-                }
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), DetailMotelRoomActivity.class);
+                intent.putExtra(Constants.MOTEL_ROOM, arrayMotelRoom.get(getAdapterPosition()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
             });
         }
 
         public void comMentListener(final String PostKey){
-            imgComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            imgComment.setOnClickListener(view -> {
 
-                    Intent intent = new Intent(view.getContext(), CommentsActivity.class);
-                    intent.putExtra("PostKey", PostKey);
+                Intent intent = new Intent(view.getContext(), CommentsActivity.class);
+                intent.putExtra("PostKey", PostKey);
 
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    view.getContext().startActivity(intent);
-                    //Toast.makeText(view.getContext(), "Comment", Toast.LENGTH_SHORT).show();
-                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                view.getContext().startActivity(intent);
+                //Toast.makeText(view.getContext(), "Comment", Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -249,46 +237,43 @@ public class MotelRoomAdapter extends RecyclerView.Adapter<MotelRoomAdapter.View
             //Toast.makeText(view.getContext(), "Delete", Toast.LENGTH_SHORT).show();
             FirebaseDatabase.getInstance().getReference().child("DeletedRoom")
                     .child(arrayMotelRoom.get(getAdapterPosition()).getId())
-                    .setValue(arrayMotelRoom.get(getAdapterPosition()), new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if (error == null){
-                                String id = arrayMotelRoom.get(getAdapterPosition()).getId();
-                                FirebaseDatabase.getInstance().getReference()
-                                        .child("MotelRoom")
-                                        .child(id)
-                                        .setValue(null);
-                                FirebaseDatabase.getInstance().getReference().child("DeletedMaps")
-                                        .child(arrayMotelRoom.get(getAdapterPosition()).getId())
-                                        .setValue(arrayMotelRoom.get(getAdapterPosition()), new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                                if (error == null){
-                                                    FirebaseDatabase.getInstance().getReference()
-                                                            .child("Maps")
-                                                            .child(id)
-                                                            .setValue(null);
-                                                   // arrayMotelRoom.remove(getAdapterPosition());
-                                                    notifyItemRemoved(getAdapterPosition());
-                                                    //Toast.makeText(view.getContext(), "Xoá tin thành công", Toast.LENGTH_SHORT).show();
-                                                }else {
-                                                    //Toast.makeText(, "Lỗi: " + error, Toast.LENGTH_SHORT).show();
-                                                }
+                    .setValue(arrayMotelRoom.get(getAdapterPosition()), (error, ref) -> {
+                        if (error == null){
+                            String id = arrayMotelRoom.get(getAdapterPosition()).getId();
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("MotelRoom")
+                                    .child(id)
+                                    .setValue(null);
+                            FirebaseDatabase.getInstance().getReference().child("DeletedMaps")
+                                    .child(arrayMotelRoom.get(getAdapterPosition()).getId())
+                                    .setValue(arrayMotelRoom.get(getAdapterPosition()), new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                            if (error == null){
+                                                FirebaseDatabase.getInstance().getReference()
+                                                        .child("Maps")
+                                                        .child(id)
+                                                        .setValue(null);
+                                               // arrayMotelRoom.remove(getAdapterPosition());
+                                                notifyItemRemoved(getAdapterPosition());
+                                                //Toast.makeText(view.getContext(), "Xoá tin thành công", Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                //Toast.makeText(, "Lỗi: " + error, Toast.LENGTH_SHORT).show();
                                             }
-                                        });
-                                arrayMotelRoom.remove(getAdapterPosition());
+                                        }
+                                    });
+                            arrayMotelRoom.remove(getAdapterPosition());
 
-                                notifyItemRemoved(getAdapterPosition());
+                            notifyItemRemoved(getAdapterPosition());
 
 
-                                Intent intent = new Intent(getContext(), HouseActivity.class);
-                                //intent.putExtra(Constants.MOTEL_ROOM, arrayMotelRoom.get(getAdapterPosition()));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                getContext().startActivity(intent);
-                                //Toast.makeText(view.getContext(), "Xoá tin thành công", Toast.LENGTH_SHORT).show();
-                            }else {
-                                //Toast.makeText(, "Lỗi: " + error, Toast.LENGTH_SHORT).show();
-                            }
+                            Intent intent = new Intent(getContext(), HouseActivity.class);
+                            //intent.putExtra(Constants.MOTEL_ROOM, arrayMotelRoom.get(getAdapterPosition()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getContext().startActivity(intent);
+                            //Toast.makeText(view.getContext(), "Xoá tin thành công", Toast.LENGTH_SHORT).show();
+                        }else {
+                            //Toast.makeText(, "Lỗi: " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
 

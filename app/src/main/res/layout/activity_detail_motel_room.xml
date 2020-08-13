@@ -111,16 +111,23 @@
                 android:layout_marginEnd="15dp"/>
 
             <TextView
-                android:id="@+id/txtUtilities"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tiện ích: WC riêng, Chủ riêng, Tự do, Máy nóng lạnh"
-                android:textSize="15sp"
-                android:textColor="#111"
-                android:layout_marginTop="15dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"/>
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorBlue"
+                android:textSize="18sp"
+                android:layout_marginStart="20dp"
+                android:text="Tiện ích"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                app:spanCount="2"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                attrs:listitem="@layout/item_utilities"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                android:id="@+id/recyclerview_list_utilities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <FrameLayout
                 android:layout_width="match_parent"

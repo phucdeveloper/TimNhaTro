@@ -104,21 +104,13 @@ public class HouseFragment extends Fragment {
 
         setUpRecyclerView();
 
-        SearchNearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkPermission();
+        SearchNearBtn.setOnClickListener(view -> checkPermission());
+        AddPostBtn.setOnClickListener(view -> {
+            if (AccountUtils.getInstance().getAccount() != null) {
+                startActivity(new Intent(getActivity().getApplicationContext(), CreatePostsActivity.class));
+                return;
             }
-        });
-        AddPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (AccountUtils.getInstance().getAccount() != null) {
-                    startActivity(new Intent(getActivity().getApplicationContext(), CreatePostsActivity.class));
-                    return;
-                }
-                startActivity(new Intent(getActivity().getApplicationContext(), LoginActivity.class));
-            }
+            startActivity(new Intent(getActivity().getApplicationContext(), LoginActivity.class));
         });
         SliderShow(v);
 
