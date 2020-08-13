@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layout"
+    android:layout_marginEnd="5dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/custom_background_utilities_unchecked"
+    android:padding="10dp"
+    android:gravity="center_vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/item_imageview_icon_utilities"
+        android:src="@drawable/icons8_air_conditioner_50"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+    <TextView
+        android:id="@+id/item_textview_name_utilities"
+        android:textColor="#5A5A5A"
+        android:textSize="18sp"
+        android:text="Máy điều hoà"
+        android:layout_marginStart="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="RtlSymmetry" />
+</LinearLayout>
