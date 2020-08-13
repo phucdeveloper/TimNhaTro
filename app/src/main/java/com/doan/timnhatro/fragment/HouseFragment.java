@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +84,9 @@ public class HouseFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference dataRef;
 
-    boolean isClickSpinner = false, isClickButtonRange = false, isClickButtonTypeRoom = false, isClickItem = false;
+    boolean isClickItem = false;
     long number1, number2;
     Bundle bundle;
-    StringBuilder builder = new StringBuilder();
 
     public HouseFragment() {
         // Required empty public constructor
@@ -356,37 +354,41 @@ public class HouseFragment extends Fragment {
                 long rangePrice2 = bundle.getLong("rangePrice2");
                 String utilities = bundle.getString("utilities");
 
-                if (!nameCity.equals("Chọn tỉnh/ thành phố") && nameTypeRoom != null && (rangePrice1 != 0 && rangePrice2 != 0)) {
+                if (!nameCity.equals("Chọn tỉnh/ thành phố") && nameTypeRoom != null && (rangePrice1 != 0 && rangePrice2 != 0) && isClickItem) {
                     arrayMotelRoom.clear();
-                    displayListMotelRoomWithAllCondition(nameCity, nameTypeRoom, rangePrice1, rangePrice2);
-                } else if (!nameCity.equals("Chọn tỉnh/ thành phố") && nameTypeRoom != null) {
-                    arrayMotelRoom.clear();
-                    displayListhMotelRoomWithNameCityAndNameTypeRoom(nameCity, nameTypeRoom);
-                } else if (nameTypeRoom != null && rangePrice1 != 0 && rangePrice2 != 0) {
-                    arrayMotelRoom.clear();
-                    displayListMotelRoomWithRangePriceAndNameTypeRoom(nameTypeRoom, rangePrice1, rangePrice2);
+                    displayListPostWithAll(nameTypeRoom, nameCity, rangePrice1, rangePrice2, utilities);
                 }
-                else if (!nameCity.equals("Chọn tỉnh/ thành phố") && rangePrice1 != 0 && rangePrice2 != 0) {
-                    arrayMotelRoom.clear();
-                    displayListMotelRoomWithRangePriceAndNameCity(nameCity, rangePrice1, rangePrice2);
-                }
-                else {
-                    if (!nameCity.equals("Chọn tỉnh/ thành phố")) {
-                        arrayMotelRoom.clear();
-                        setUpRecyclerViewWithNameCity(nameCity);
-                    } else if (nameTypeRoom != null) {
-                        arrayMotelRoom.clear();
-                        setUpRecyclerViewWithTypeRoom(nameTypeRoom);
-                    }
-                    else if(rangePrice1 != 0 && rangePrice2 != 0){
-                        arrayMotelRoom.clear();
-                        setUpRecyclerViewWithRangePrice(rangePrice1, rangePrice2);
-                    }
-                    else if (isClickItem){
-                        arrayMotelRoom.clear();
-                        displayPostWithUtilities(utilities);
-                    }
-                }
+//                if (!nameCity.equals("Chọn tỉnh/ thành phố") && nameTypeRoom != null && (rangePrice1 != 0 && rangePrice2 != 0)) {
+//                    arrayMotelRoom.clear();
+//                    displayListMotelRoomWithAllCondition(nameCity, nameTypeRoom, rangePrice1, rangePrice2);
+//                } else if (!nameCity.equals("Chọn tỉnh/ thành phố") && nameTypeRoom != null) {
+//                    arrayMotelRoom.clear();
+//                    displayListhMotelRoomWithNameCityAndNameTypeRoom(nameCity, nameTypeRoom);
+//                } else if (nameTypeRoom != null && rangePrice1 != 0 && rangePrice2 != 0) {
+//                    arrayMotelRoom.clear();
+//                    displayListMotelRoomWithRangePriceAndNameTypeRoom(nameTypeRoom, rangePrice1, rangePrice2);
+//                }
+//                else if (!nameCity.equals("Chọn tỉnh/ thành phố") && rangePrice1 != 0 && rangePrice2 != 0) {
+//                    arrayMotelRoom.clear();
+//                    displayListMotelRoomWithRangePriceAndNameCity(nameCity, rangePrice1, rangePrice2);
+//                }
+//                else {
+//                    if (!nameCity.equals("Chọn tỉnh/ thành phố")) {
+//                        arrayMotelRoom.clear();
+//                        setUpRecyclerViewWithNameCity(nameCity);
+//                    } else if (nameTypeRoom != null) {
+//                        arrayMotelRoom.clear();
+//                        setUpRecyclerViewWithTypeRoom(nameTypeRoom);
+//                    }
+//                    else if(rangePrice1 != 0 && rangePrice2 != 0){
+//                        arrayMotelRoom.clear();
+//                        setUpRecyclerViewWithRangePrice(rangePrice1, rangePrice2);
+//                    }
+//                    else if (isClickItem){
+//                        arrayMotelRoom.clear();
+//                        displayPostWithUtilities(utilities);
+//                    }
+//                }
             }
 
             dialog.cancel();
@@ -666,6 +668,32 @@ public class HouseFragment extends Fragment {
 
                     }
                 });
+    }
+
+    private void displayListPostWithAll(String nameTypeRoom, String nameCity, long a, long b, String utilities){
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        dataRef = firebaseDatabase.getReference().child("MotelRoom");
+        dataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    MotelRoom motelRoom = dataSnapshot.getValue(MotelRoom.class);
+                    if (motelRoom.getCity().equals(nameCity) && (motelRoom.getPrice() >= a && motelRoom.getPrice() <= b)
+                    && (motelRoom.getNameMotelRoom().equals(nameTypeRoom))&&(motelRoom.getListUtilities().contains(utilities))){
+                        arrayMotelRoom.add(motelRoom);
+                    }
+                }
+
+                motelRoomAdapter = new MotelRoomAdapter(arrayMotelRoom);
+                recRoomsFeatured.setAdapter(motelRoomAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void setUpRecyclerViewListUtilities(RecyclerView recyclerView) {
