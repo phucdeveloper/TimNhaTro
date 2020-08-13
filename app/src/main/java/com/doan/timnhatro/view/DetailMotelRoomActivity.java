@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.doan.timnhatro.R;
 import com.doan.timnhatro.adapter.PictureArrayAdapter;
 import com.doan.timnhatro.adapter.UtilitiesAdapter;
+import com.doan.timnhatro.adapter.UtilitiesDetailAdapter;
 import com.doan.timnhatro.base.Constants;
 import com.doan.timnhatro.model.MotelRoom;
 import com.doan.timnhatro.model.Utilities;
@@ -159,10 +160,10 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
         }
         recyclerView.setHasFixedSize(true);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(DetailMotelRoomActivity.this, 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(DetailMotelRoomActivity.this, 3);
         recyclerView.setLayoutManager(layoutManager);
 
-        final UtilitiesAdapter adapter = new UtilitiesAdapter(listDataUtilities, DetailMotelRoomActivity.this);
+        final UtilitiesDetailAdapter adapter = new UtilitiesDetailAdapter(listDataUtilities, DetailMotelRoomActivity.this);
         recyclerView.setAdapter(adapter);
     }
 
