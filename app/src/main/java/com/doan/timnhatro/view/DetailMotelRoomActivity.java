@@ -38,7 +38,7 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MotelRoom motelRoom;
     private CircleImageView imgAvatar;
-    private TextView txtNameMotelRoom,txtTime,txtPrice,txtStreet,edtDescribe,txtName,txtPhoneNumber;
+    private TextView txtNameMotelRoom,txtTime,txtPrice,txtStreet,edtDescribe,txtName,txtPhoneNumber, txtUtilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
                 .into(imgAvatar);
 
         txtName.setText(motelRoom.getAccount().getName());
+        txtUtilities.setText(motelRoom.getListUtilities());
 
         SpannableString formatPhoneNumber = new SpannableString("Số điện thoại:   " + motelRoom.getAccount().getPhoneNumber());
         formatPhoneNumber.setSpan(new StyleSpan(BOLD),0,14,0);
@@ -115,6 +116,7 @@ public class DetailMotelRoomActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.imgAvatar);
         txtName = findViewById(R.id.txtName);
         txtPhoneNumber = findViewById(R.id.txtPhoneNumber);
+        txtUtilities = findViewById(R.id.txtUtilities);
     }
 
     @SuppressLint("MissingPermission")
